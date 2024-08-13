@@ -3,12 +3,15 @@
 interface IEnvSensDrv
 {
     +{abstract}virtual return_code init() = 0
+
     +{abstract}virtual return_code startContinuousMeasurements() = 0
     +{abstract}virtual return_code startSingleMeasurement() = 0
     +{abstract}virtual return_code stopMeasuring() = 0
-    +{abstract}virtual return_code readTemperature(int32_t &temperature) = 0
-    +{abstract}virtual return_code readHumidity(uint32_t &humidity) = 0
-    +{abstract}virtual return_code readPressure(uint32_t &pressure) = 0
+
+    +{abstract}virtual return_code readTemperature(int32_t &temperature)
+    +{abstract}virtual return_code readHumidity(uint32_t &humidity)
+    +{abstract}virtual return_code readPressure(uint32_t &pressure)
+
     +{abstract}virtual return_code getMeasurementState() = 0
     +{abstract}virtual void process() = 0
 
@@ -32,12 +35,15 @@ class EnvSensBME280Drv implements IEnvSensDrv
     +EnvSensBME280Drv(bme280_config_t *bme280_config, i2c_master_bus_handle_t bus_handle)
 
     +return_code init() override
+
     +return_code startContinuousMeasurements() override
     +return_code startSingleMeasurement() override
     +return_code stopMeasuring() override
+
     +return_code readTemperature(int32_t &temperature) override
     +return_code readHumidity(uint32_t &humidity) override
     +return_code readPressure(uint32_t &pressure) override
+
     +return_code getMeasurementState() override
     +void process() override
 
@@ -60,12 +66,14 @@ class EnvSensBMP280Drv implements IEnvSensDrv
     +EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle)
 
     +return_code init() override
+
     +return_code startContinuousMeasurements() override
     +return_code startSingleMeasurement() override
     +return_code stopMeasuring() override
+
     +return_code readTemperature(int32_t &temperature) override
-    +return_code readHumidity(uint32_t &humidity) override
     +return_code readPressure(uint32_t &pressure) override
+    
     +return_code getMeasurementState() override
     +void process() override
 

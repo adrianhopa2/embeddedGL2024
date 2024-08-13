@@ -33,7 +33,11 @@ return_code EnvSensBME280Drv::init()
         },
     };
 
-    ESP_ERROR_CHECK(i2c_master_bus_add_device(m_bus_handle, &dev_cfg, &m_dev_handle));
+    if (i2c_master_bus_add_device(m_bus_handle, &dev_cfg, &m_dev_handle))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     uint8_t buffer_config[2];
     uint8_t buffer_ctrl_meas[2];
@@ -41,15 +45,27 @@ return_code EnvSensBME280Drv::init()
 
     buffer_config[0] = 0xF5;
     buffer_config[1] = ((m_bme280_config.standby_time << 5) | (m_bme280_config.filter_coefficient << 2));
-    ESP_ERROR_CHECK(i2c_master_transmit(m_dev_handle, buffer_config, 2, -1));
+    if (i2c_master_transmit(m_dev_handle, buffer_config, 2, -1))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     buffer_ctrl_hum[0] = 0xF2;
     buffer_ctrl_hum[1] = m_bme280_config.humidity_oversampling;
-    ESP_ERROR_CHECK(i2c_master_transmit(m_dev_handle, buffer_ctrl_hum, 2, -1));
+    if (i2c_master_transmit(m_dev_handle, buffer_ctrl_hum, 2, -1))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     buffer_ctrl_meas[0] = 0xF4;
     buffer_ctrl_meas[1] = ((m_bme280_config.temperature_oversampling << 5) | (m_bme280_config.pressure_oversampling << 2));
-    ESP_ERROR_CHECK(i2c_master_transmit(m_dev_handle, buffer_ctrl_meas, 2, -1));
+    if (i2c_master_transmit(m_dev_handle, buffer_ctrl_meas, 2, -1))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     uint8_t reg_addr[1] = {0x88};
     uint8_t reg_calib_data[26] = {0};
@@ -141,7 +157,6 @@ return_code EnvSensBME280Drv::startSingleMeasurement()
     {
         return error;
     }
-
 }
 
 // enter sleep mode

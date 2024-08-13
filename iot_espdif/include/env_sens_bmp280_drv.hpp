@@ -48,7 +48,6 @@ public:
     return_code startSingleMeasurement() override;
     return_code stopMeasuring() override;
     return_code readTemperature(int32_t &temperature) override;
-    return_code readHumidity(uint32_t &humidity) override;
     return_code readPressure(uint32_t &pressure) override;
     return_code getMeasurementState() override;
     void process() override;

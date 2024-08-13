@@ -15,7 +15,6 @@ EnvSensBMP280Drv::EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bu
     m_pressure = 0;
 
     m_state = not_initialized;
-
 }
 
 return_code EnvSensBMP280Drv::init()
@@ -32,18 +31,30 @@ return_code EnvSensBMP280Drv::init()
         },
     };
 
-    ESP_ERROR_CHECK(i2c_master_bus_add_device(m_bus_handle, &dev_cfg, &m_dev_handle));
+    if (i2c_master_bus_add_device(m_bus_handle, &dev_cfg, &m_dev_handle))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     uint8_t buffer_config[2];
     uint8_t buffer_ctrl_meas[2];
 
     buffer_config[0] = 0xF5;
     buffer_config[1] = ((m_bmp280_config.standby_time << 5) | (m_bmp280_config.filter_coefficient << 2));
-    ESP_ERROR_CHECK(i2c_master_transmit(m_dev_handle, buffer_config, 2, -1));
+    if (i2c_master_transmit(m_dev_handle, buffer_config, 2, -1))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     buffer_ctrl_meas[0] = 0xF4;
     buffer_ctrl_meas[1] = ((m_bmp280_config.temperature_oversampling << 5) | (m_bmp280_config.pressure_oversampling << 2));
-    ESP_ERROR_CHECK(i2c_master_transmit(m_dev_handle, buffer_ctrl_meas, 2, -1));
+    if (i2c_master_transmit(m_dev_handle, buffer_ctrl_meas, 2, -1))
+    {
+        m_state = error;
+        return m_state;
+    }
 
     uint8_t reg_addr[1] = {0x88};
     uint8_t reg_calib_data[24] = {0};
@@ -110,7 +121,6 @@ return_code EnvSensBMP280Drv::startSingleMeasurement()
     {
         return error;
     }
-
 }
 
 // enter sleep mode
@@ -140,11 +150,6 @@ return_code EnvSensBMP280Drv::readTemperature(int32_t &temperature)
         temperature = m_temperature;
     }
     return m_state;
-}
-
-return_code EnvSensBMP280Drv::readHumidity(uint32_t &humidity)
-{
-    return not_supported;
 }
 
 return_code EnvSensBMP280Drv::readPressure(uint32_t &pressure)
