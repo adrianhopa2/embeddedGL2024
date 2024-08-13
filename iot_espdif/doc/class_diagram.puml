@@ -1,0 +1,75 @@
+@startuml diagram
+
+interface IEnvSensDrv
+{
+    +{abstract}virtual return_code init() = 0
+    +{abstract}virtual return_code startContinuousMeasurements() = 0
+    +{abstract}virtual return_code startSingleMeasurement() = 0
+    +{abstract}virtual return_code stopMeasuring() = 0
+    +{abstract}virtual return_code readTemperature(int32_t &temperature) = 0
+    +{abstract}virtual return_code readHumidity(uint32_t &humidity) = 0
+    +{abstract}virtual return_code readPressure(uint32_t &pressure) = 0
+    +{abstract}virtual return_code getMeasurementState() = 0
+    +{abstract}virtual void process() = 0
+
+    +{abstract}virtual ~IEnvSensDrv() {}
+}
+
+class EnvSensBME280Drv implements IEnvSensDrv
+{
+    -i2c_master_bus_handle_t m_bus_handle
+    -i2c_master_dev_handle_t m_dev_handle
+
+    -bme280_config_t m_bme280_config
+    -bme280_calib_data m_calib_data
+
+    -return_code m_state
+
+    -int32_t m_temperature
+    -uint32_t m_pressure
+    -uint32_t m_humidity
+
+    +EnvSensBME280Drv(bme280_config_t *bme280_config, i2c_master_bus_handle_t bus_handle)
+
+    +return_code init() override
+    +return_code startContinuousMeasurements() override
+    +return_code startSingleMeasurement() override
+    +return_code stopMeasuring() override
+    +return_code readTemperature(int32_t &temperature) override
+    +return_code readHumidity(uint32_t &humidity) override
+    +return_code readPressure(uint32_t &pressure) override
+    +return_code getMeasurementState() override
+    +void process() override
+
+    +~EnvSensBME280Drv()
+}
+
+class EnvSensBMP280Drv implements IEnvSensDrv
+{
+    -i2c_master_bus_handle_t m_bus_handle
+    -i2c_master_dev_handle_t m_dev_handle
+
+    -bmp280_config_t m_bmp280_config
+    -bmp280_calib_data m_calib_data
+
+    -return_code m_state
+
+    -int32_t m_temperature
+    -uint32_t m_pressure
+
+    +EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle)
+
+    +return_code init() override
+    +return_code startContinuousMeasurements() override
+    +return_code startSingleMeasurement() override
+    +return_code stopMeasuring() override
+    +return_code readTemperature(int32_t &temperature) override
+    +return_code readHumidity(uint32_t &humidity) override
+    +return_code readPressure(uint32_t &pressure) override
+    +return_code getMeasurementState() override
+    +void process() override
+
+    +~EnvSensBMP280Drv()
+}
+
+@enduml

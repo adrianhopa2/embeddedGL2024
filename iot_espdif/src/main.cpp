@@ -2,6 +2,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include "env_sens_bme280_drv.hpp"
+#include "env_sens_bmp280_drv.hpp"
 
 #define SCL_IO_PIN GPIO_NUM_22
 #define SDA_IO_PIN GPIO_NUM_21
@@ -24,45 +25,54 @@ extern "C"
 
         ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_config, &bus_handle));
 
-        bme280_config_t bme280_config = {
+        bmp280_config_t bmp280_config = {
             .standby_time = 0b011,
             .filter_coefficient = 0b000,
             .pressure_oversampling = 0b001,
             .temperature_oversampling = 0b001,
-            .humidity_oversampling = 0b001,
         };
+        EnvSensBMP280Drv bmp280(&bmp280_config, bus_handle);
 
-        EnvSensBME280Drv bme280(&bme280_config, bus_handle);
+        // bme280_config_t bme280_config = {
+        //     .standby_time = 0b011,
+        //     .filter_coefficient = 0b000,
+        //     .pressure_oversampling = 0b001,
+        //     .temperature_oversampling = 0b001,
+        //     .humidity_oversampling = 0b001,
+        // };
+        // EnvSensBME280Drv bme280(&bme280_config, bus_handle);
 
-        if (bme280.init())
+        if (bmp280.init() == idle)
         {
             printf("\nSensor initialized\n");
-            if (bme280.startContinuousMeasurements())
+            if (bmp280.startContinuousMeasurements() == ok)
             {
                 printf("\nStarted Measurement\n\n");
                 while (1)
                 {
-                    bme280.process();
+                    vTaskDelay(2000 / portTICK_PERIOD_MS);
+
+                    bmp280.process();
                     int32_t temp = {0};
                     uint32_t pres = {0};
-                    uint16_t hum = {0};
+                    uint32_t hum = {0};
 
-                    if (bme280.readTemperature(temp) == ok)
+                    if (bmp280.readTemperature(temp) == ok)
                     {
                         printf("temperature: %.2lf\n", (double)temp / 100);
                     }
 
-                    if (bme280.readPressure(pres) == ok)
+                    if (bmp280.readPressure(pres) == ok)
                     {
-                        printf("pressure: %.3lf\n", (double)pres / 25600);
+                        printf("pressure: %.2lf\n", (double)pres / 25600);
                     }
 
-                    if (bme280.readHumidity(hum) == ok)
+                    if (bmp280.readHumidity(hum) == ok)
                     {
-                        printf("humidity: %.3lf\n\n", (double)hum / 1024);
+                        printf("humidity: %.2lf\n", (double)hum / 1024);
                     }
 
-                    vTaskDelay(2000 / portTICK_PERIOD_MS);
+                    printf("\n");
                 }
             }
         }

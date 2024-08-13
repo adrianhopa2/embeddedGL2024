@@ -1,19 +1,18 @@
-#ifndef _ENV_SENS_BME280_DRV_H
-#define _ENV_SENS_BME280_DRV_H
+#ifndef _ENV_SENS_BMP280_DRV_H
+#define _ENV_SENS_BMP280_DRV_H
 
 #include <driver/i2c_master.h>
 #include "env_sens_drv_interface.hpp"
 
-typedef struct bme280_config_t
+typedef struct bmp280_config_t
 {
     uint8_t standby_time;
     uint8_t filter_coefficient;
     uint8_t pressure_oversampling;
     uint8_t temperature_oversampling;
-    uint8_t humidity_oversampling;
-} bme280_config_t;
+} bmp280_config_t;
 
-struct bme280_calib_data
+struct bmp280_calib_data
 {
     uint16_t dig_t1;
     int16_t dig_t2;
@@ -27,29 +26,22 @@ struct bme280_calib_data
     int16_t dig_p7;
     int16_t dig_p8;
     int16_t dig_p9;
-    uint8_t dig_h1;
-    int16_t dig_h2;
-    uint8_t dig_h3;
-    int16_t dig_h4;
-    int16_t dig_h5;
-    int8_t dig_h6;
     int32_t t_fine;
 };
 
-class EnvSensBME280Drv : public IEnvSensDrv
+class EnvSensBMP280Drv : public IEnvSensDrv
 {
 private:
     i2c_master_bus_handle_t m_bus_handle;
     i2c_master_dev_handle_t m_dev_handle;
-    bme280_config_t m_bme280_config;
-    bme280_calib_data m_calib_data;
+    bmp280_config_t m_bmp280_config;
+    bmp280_calib_data m_calib_data;
     return_code m_state;
     int32_t m_temperature;
     uint32_t m_pressure;
-    uint32_t m_humidity;
 
 public:
-    EnvSensBME280Drv(bme280_config_t *bme280_config, i2c_master_bus_handle_t bus_handle);
+    EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle);
 
     return_code init() override;
     return_code startContinuousMeasurements() override;
@@ -61,7 +53,7 @@ public:
     return_code getMeasurementState() override;
     void process() override;
 
-    ~EnvSensBME280Drv();
+    ~EnvSensBMP280Drv();
 };
 
 #endif
