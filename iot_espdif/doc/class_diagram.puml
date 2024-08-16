@@ -2,20 +2,20 @@
 
 interface IEnvSensDrv
 {
-    +{abstract}virtual return_code init() = 0
+    + {abstract} return_code init()
 
-    +{abstract}virtual return_code startContinuousMeasurements() = 0
-    +{abstract}virtual return_code startSingleMeasurement() = 0
-    +{abstract}virtual return_code stopMeasuring() = 0
+    + {abstract} return_code startContinuousMeasurements()
+    + {abstract} return_code startSingleMeasurement()
+    + {abstract} return_code stopMeasuring()
 
-    +{abstract}virtual return_code readTemperature(int32_t &temperature)
-    +{abstract}virtual return_code readHumidity(uint32_t &humidity)
-    +{abstract}virtual return_code readPressure(uint32_t &pressure)
+    + {abstract} return_code readTemperature(int32_t &temperature)
+    + {abstract} return_code readHumidity(uint32_t &humidity)
+    + {abstract} return_code readPressure(uint32_t &pressure)
 
-    +{abstract}virtual return_code getMeasurementState() = 0
-    +{abstract}virtual void process() = 0
+    + {abstract} return_code getMeasurementState()
+    + {abstract} void process()
 
-    +{abstract}virtual ~IEnvSensDrv() {}
+    + {abstract} ~IEnvSensDrv()
 }
 
 class EnvSensBME280Drv implements IEnvSensDrv
@@ -34,18 +34,18 @@ class EnvSensBME280Drv implements IEnvSensDrv
 
     +EnvSensBME280Drv(bme280_config_t *bme280_config, i2c_master_bus_handle_t bus_handle)
 
-    +return_code init() override
+    +return_code init()
 
-    +return_code startContinuousMeasurements() override
-    +return_code startSingleMeasurement() override
-    +return_code stopMeasuring() override
+    +return_code startContinuousMeasurements()
+    +return_code startSingleMeasurement()
+    +return_code stopMeasuring()
 
-    +return_code readTemperature(int32_t &temperature) override
-    +return_code readHumidity(uint32_t &humidity) override
-    +return_code readPressure(uint32_t &pressure) override
+    +return_code readTemperature(int32_t &temperature)
+    +return_code readHumidity(uint32_t &humidity)
+    +return_code readPressure(uint32_t &pressure)
 
-    +return_code getMeasurementState() override
-    +void process() override
+    +return_code getMeasurementState()
+    +void process()
 
     +~EnvSensBME280Drv()
 }
@@ -65,17 +65,17 @@ class EnvSensBMP280Drv implements IEnvSensDrv
 
     +EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle)
 
-    +return_code init() override
+    +return_code init()
 
-    +return_code startContinuousMeasurements() override
-    +return_code startSingleMeasurement() override
-    +return_code stopMeasuring() override
+    +return_code startContinuousMeasurements()
+    +return_code startSingleMeasurement()
+    +return_code stopMeasuring()
 
-    +return_code readTemperature(int32_t &temperature) override
-    +return_code readPressure(uint32_t &pressure) override
-    
-    +return_code getMeasurementState() override
-    +void process() override
+    +return_code readTemperature(int32_t &temperature)
+    +return_code readPressure(uint32_t &pressure)
+
+    +return_code getMeasurementState()
+    +void process()
 
     +~EnvSensBMP280Drv()
 }
