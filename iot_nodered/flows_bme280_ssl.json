@@ -1,0 +1,413 @@
+[
+    {
+        "id": "4ce6f98c.254bf",
+        "type": "tab",
+        "label": "Plot BME280 Sensor Data",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1ce19c7d.1392e4",
+        "type": "debug",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "49ce87c1.4ec838",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "Chart Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.d.temperature",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temperature",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 120,
+        "wires": [
+            [
+                "1d4ec5b5.82c9f2"
+            ]
+        ]
+    },
+    {
+        "id": "2f57084.22acd78",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "Chart Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.d.humidity",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "humidity",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "fda5229a.103b8"
+            ]
+        ]
+    },
+    {
+        "id": "d7a2c22e.f27d1",
+        "type": "switch",
+        "z": "4ce6f98c.254bf",
+        "name": "Warn on High Values",
+        "property": "payload.d.temperature",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "30",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 420,
+        "y": 240,
+        "wires": [
+            [
+                "732cea1.a542294"
+            ]
+        ]
+    },
+    {
+        "id": "732cea1.a542294",
+        "type": "template",
+        "z": "4ce6f98c.254bf",
+        "name": "Alert Msg",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Alert : Critical Value Detected {{payload.d.temperature}}",
+        "output": "str",
+        "x": 620,
+        "y": 240,
+        "wires": [
+            [
+                "80bbdd78.c69ae8"
+            ]
+        ]
+    },
+    {
+        "id": "1d4ec5b5.82c9f2",
+        "type": "ui_chart",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "group": "1bb2d88d.8be177",
+        "order": 1,
+        "width": "12",
+        "height": "5",
+        "label": "BME280 Temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 660,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fda5229a.103b8",
+        "type": "ui_chart",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "group": "1bb2d88d.8be177",
+        "order": 2,
+        "width": "12",
+        "height": "5",
+        "label": "BME280 Humidity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 650,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "80bbdd78.c69ae8",
+        "type": "ui_toast",
+        "z": "4ce6f98c.254bf",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 870,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "46f3a55.224d15c",
+        "type": "mqtt in",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "topic": "/topic/iot_env_data",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "471463a7deecd0d2",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 90,
+        "y": 160,
+        "wires": [
+            [
+                "1ce19c7d.1392e4",
+                "49ce87c1.4ec838",
+                "2f57084.22acd78",
+                "d7a2c22e.f27d1",
+                "0f8b65e30016eccb"
+            ]
+        ]
+    },
+    {
+        "id": "0f8b65e30016eccb",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "Chart Pressure",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.d.pressure",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "pressure",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "d2ecf9b67e129f79"
+            ]
+        ]
+    },
+    {
+        "id": "d2ecf9b67e129f79",
+        "type": "ui_chart",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "group": "1bb2d88d.8be177",
+        "order": 2,
+        "width": "12",
+        "height": "5",
+        "label": "BME280 Pressure",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "900",
+        "ymax": "1100",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 650,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1bb2d88d.8be177",
+        "type": "ui_group",
+        "name": "BME280 Sensors",
+        "tab": "88fe602a.e1955",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "471463a7deecd0d2",
+        "type": "mqtt-broker",
+        "name": "ssl_mutual_auth test.mosquitto.org",
+        "broker": "test.mosquitto.org",
+        "port": "8884",
+        "tls": "8e403a4a3faadc4e",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "88fe602a.e1955",
+        "type": "ui_tab",
+        "name": "BME280",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "8e403a4a3faadc4e",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "mosquitto.org.crt",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    }
+]
