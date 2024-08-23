@@ -11,6 +11,13 @@ bool isMQTTconnected = false;
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
 
+extern const uint8_t client_cert_pem_start[] asm("_binary_client_crt_start");
+extern const uint8_t client_cert_pem_end[] asm("_binary_client_crt_end");
+extern const uint8_t client_key_pem_start[] asm("_binary_client_key_start");
+extern const uint8_t client_key_pem_end[] asm("_binary_client_key_end");
+extern const uint8_t server_cert_pem_start[] asm("_binary_mosquitto_org_crt_start");
+extern const uint8_t server_cert_pem_end[] asm("_binary_mosquitto_org_crt_end");
+
 static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START)
@@ -171,13 +178,22 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
 void myMQTTapp()
 {
-    esp_mqtt_client_config_t mqtt_cfg = {
+
+    static esp_mqtt_client_config_t mqtt_cfg = {
         .broker = {
             .address = {
-                //.uri = "mqtt://public.mqtthq.com",
-                //.uri = "mqtt://mqtt.eclipseprojects.io",
-                .uri = "mqtt://broker.mqtt.cool",
-            }}};
+                .uri = "mqtts://test.mosquitto.org:8884",
+            },
+            .verification = {
+                .certificate = reinterpret_cast<const char *>(server_cert_pem_start),
+            },
+        },
+        .credentials = {
+            .authentication = {
+                .certificate = reinterpret_cast<const char *>(client_cert_pem_start),
+                .key = reinterpret_cast<const char *>(client_key_pem_start),
+            },
+        }};
 
 #if CONFIG_BROKER_URL_FROM_STDIN
     char line[128];
@@ -286,7 +302,7 @@ void myMQTTtask(void *pvParameters)
 
             payload += "}}";
 
-            msg_id = esp_mqtt_client_publish(client, "/topic/iot_env_data", payload.c_str(), 0, 0, 0);
+            msg_id = esp_mqtt_client_publish(client, "/topic/iot_env_data", payload.c_str(), 0, 1, 0);
             ESP_LOGI("MQTT_TASK", "sent publish successful, msg_id=%d", msg_id);
 
             vTaskDelay(4500 / portTICK_PERIOD_MS);
