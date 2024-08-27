@@ -1,0 +1,1247 @@
+[
+    {
+        "id": "4ce6f98c.254bf",
+        "type": "tab",
+        "label": "Plot BME280 Sensor Data",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "7e90fa78a4bdf61a",
+        "type": "junction",
+        "z": "4ce6f98c.254bf",
+        "x": 800,
+        "y": 740,
+        "wires": [
+            [
+                "1f250317b6c74cfc",
+                "5194a201078f054f"
+            ]
+        ]
+    },
+    {
+        "id": "1ce19c7d.1392e4",
+        "type": "debug",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "49ce87c1.4ec838",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "Chart Temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.d.temperature",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "temperature",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 470,
+        "y": 300,
+        "wires": [
+            [
+                "1d4ec5b5.82c9f2"
+            ]
+        ]
+    },
+    {
+        "id": "2f57084.22acd78",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "Chart Humidity",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.d.humidity",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "humidity",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 340,
+        "wires": [
+            [
+                "fda5229a.103b8"
+            ]
+        ]
+    },
+    {
+        "id": "1d4ec5b5.82c9f2",
+        "type": "ui_chart",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "group": "1bb2d88d.8be177",
+        "order": 1,
+        "width": 9,
+        "height": 6,
+        "label": "BME280 Temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 760,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fda5229a.103b8",
+        "type": "ui_chart",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "group": "1bb2d88d.8be177",
+        "order": 3,
+        "width": 9,
+        "height": 6,
+        "label": "BME280 Humidity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 750,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "46f3a55.224d15c",
+        "type": "mqtt in",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "topic": "/topic/iot_env_data",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "471463a7deecd0d2",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 110,
+        "y": 340,
+        "wires": [
+            [
+                "1ce19c7d.1392e4",
+                "0f8b65e30016eccb",
+                "2f57084.22acd78",
+                "49ce87c1.4ec838",
+                "da7fdd4182a858c7"
+            ]
+        ]
+    },
+    {
+        "id": "0f8b65e30016eccb",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "Chart Pressure",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.d.pressure",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "pressure",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 380,
+        "wires": [
+            [
+                "d2ecf9b67e129f79"
+            ]
+        ]
+    },
+    {
+        "id": "d2ecf9b67e129f79",
+        "type": "ui_chart",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "group": "1bb2d88d.8be177",
+        "order": 14,
+        "width": 9,
+        "height": 6,
+        "label": "BME280 Pressure",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "900",
+        "ymax": "1100",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 750,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6b8658b1caf69839",
+        "type": "mqtt out",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "topic": "/topic/iot_node_red",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "471463a7deecd0d2",
+        "x": 1150,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "1f250317b6c74cfc",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "/topic/iot_node_red",
+                "tot": "str"
+            },
+            {
+                "t": "delete",
+                "p": "payload.d",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 740,
+        "wires": [
+            [
+                "6b8658b1caf69839"
+            ]
+        ]
+    },
+    {
+        "id": "7f77ba2ddf7be7a6",
+        "type": "ui_slider",
+        "z": "4ce6f98c.254bf",
+        "name": "temp_slider",
+        "label": "temperature threshold",
+        "tooltip": "",
+        "group": "1bb2d88d.8be177",
+        "order": 9,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "40",
+        "step": 1,
+        "className": "",
+        "x": 590,
+        "y": 40,
+        "wires": [
+            [
+                "1d3023308d2f4e7f"
+            ]
+        ]
+    },
+    {
+        "id": "1d3023308d2f4e7f",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temp_threshold",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0403455a679e2ad1",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "set temp threshold deault",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temp_threshold",
+                "pt": "flow",
+                "to": "30",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "temp_threshold",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 40,
+        "wires": [
+            [
+                "7f77ba2ddf7be7a6"
+            ]
+        ]
+    },
+    {
+        "id": "2eb21f28e991021b",
+        "type": "inject",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "temp_threshold",
+        "payloadType": "flow",
+        "x": 160,
+        "y": 40,
+        "wires": [
+            [
+                "0403455a679e2ad1"
+            ]
+        ]
+    },
+    {
+        "id": "07be6aef450ea1de",
+        "type": "ui_slider",
+        "z": "4ce6f98c.254bf",
+        "name": "hum_slider",
+        "label": "humidity threshold",
+        "tooltip": "",
+        "group": "1bb2d88d.8be177",
+        "order": 11,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "className": "",
+        "x": 590,
+        "y": 100,
+        "wires": [
+            [
+                "94111b0e6de74858"
+            ]
+        ]
+    },
+    {
+        "id": "94111b0e6de74858",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "hum_threshold",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2bdc161947821f33",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "set hum threshold deault",
+        "rules": [
+            {
+                "t": "set",
+                "p": "hum_threshold",
+                "pt": "flow",
+                "to": "60",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "hum_threshold",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "07be6aef450ea1de"
+            ]
+        ]
+    },
+    {
+        "id": "776deffc3680a850",
+        "type": "inject",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "hum_threshold",
+        "payloadType": "flow",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "2bdc161947821f33"
+            ]
+        ]
+    },
+    {
+        "id": "3dd7f3b0b009dcc6",
+        "type": "ui_slider",
+        "z": "4ce6f98c.254bf",
+        "name": "pres_slider",
+        "label": "pressure threshold",
+        "tooltip": "",
+        "group": "1bb2d88d.8be177",
+        "order": 27,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "900",
+        "max": "1100",
+        "step": "10",
+        "className": "",
+        "x": 590,
+        "y": 160,
+        "wires": [
+            [
+                "d82e1052ea4b7901"
+            ]
+        ]
+    },
+    {
+        "id": "d82e1052ea4b7901",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "pres_threshold",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5b23391228c6bf9f",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "set pres threshold deault",
+        "rules": [
+            {
+                "t": "set",
+                "p": "pres_threshold",
+                "pt": "flow",
+                "to": "1000",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "pres_threshold",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 160,
+        "wires": [
+            [
+                "3dd7f3b0b009dcc6"
+            ]
+        ]
+    },
+    {
+        "id": "be300fcf4fd4b8eb",
+        "type": "inject",
+        "z": "4ce6f98c.254bf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "pres_threshold",
+        "payloadType": "flow",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "5b23391228c6bf9f"
+            ]
+        ]
+    },
+    {
+        "id": "232bf5519bb17ea0",
+        "type": "inject",
+        "z": "4ce6f98c.254bf",
+        "name": "clear",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "1d4ec5b5.82c9f2",
+                "fda5229a.103b8",
+                "d2ecf9b67e129f79"
+            ]
+        ]
+    },
+    {
+        "id": "58e86217c1f37987",
+        "type": "ui_toast",
+        "z": "4ce6f98c.254bf",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": true,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 1150,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "5194a201078f054f",
+        "type": "function",
+        "z": "4ce6f98c.254bf",
+        "name": "function notification",
+        "func": "var payload = \"\";\n\nif(msg.payload.threshold_exceeded.temperature)\n{\n    payload += \"Temperature \";\n    payload += msg.payload.d.temperature.toFixed(2);\n    payload += \" - over treshold of \";\n    payload += flow.get(\"temp_threshold\");\n    payload += \"<br>\";\n}\n\nif(msg.payload.threshold_exceeded.humidity)\n{\n    payload += \"Humidity \";\n    payload += msg.payload.d.humidity.toFixed(2);\n    payload += \" - over treshold of \";\n    payload += flow.get(\"hum_threshold\");\n    payload += \"<br>\";\n}\n\nif(msg.payload.threshold_exceeded.pressure)\n{\n    payload += \"Pressure \";\n    payload += msg.payload.d.pressure.toFixed(2);\n    payload += \" - over treshold of \";\n    payload += flow.get(\"pres_threshold\");\n    payload += \"<br>\";\n}\n\nif(msg.payload.threshold_exceeded.temperature || msg.payload.threshold_exceeded.humidity || msg.payload.threshold_exceeded.pressure)\n{\n    msg.payload = payload;\n    msg.topic = \"Value over threshold\";\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 800,
+        "wires": [
+            [
+                "58e86217c1f37987"
+            ]
+        ]
+    },
+    {
+        "id": "da7fdd4182a858c7",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "set threshold_exceeded false",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.threshold_exceeded.temperature",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "payload.threshold_exceeded.humidity",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "payload.threshold_exceeded.pressure",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 500,
+        "wires": [
+            [
+                "5d47bff90f57b3f8"
+            ]
+        ]
+    },
+    {
+        "id": "5d47bff90f57b3f8",
+        "type": "switch",
+        "z": "4ce6f98c.254bf",
+        "name": "check temperature",
+        "property": "payload.d.temperature",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "temp_threshold",
+                "vt": "flow"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 150,
+        "y": 560,
+        "wires": [
+            [
+                "e3fdfa88853004e5"
+            ],
+            [
+                "7ab3f5d33e6e6b10"
+            ]
+        ]
+    },
+    {
+        "id": "7ab3f5d33e6e6b10",
+        "type": "switch",
+        "z": "4ce6f98c.254bf",
+        "name": "check humidity",
+        "property": "payload.d.humidity",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "hum_threshold",
+                "vt": "flow"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 400,
+        "y": 620,
+        "wires": [
+            [
+                "5ad9808818e3e1c5"
+            ],
+            [
+                "f14648d4e75035c0"
+            ]
+        ]
+    },
+    {
+        "id": "f14648d4e75035c0",
+        "type": "switch",
+        "z": "4ce6f98c.254bf",
+        "name": "check pressure",
+        "property": "payload.d.pressure",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "pres_threshold",
+                "vt": "flow"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 640,
+        "y": 680,
+        "wires": [
+            [
+                "d2f86219f211e67c"
+            ],
+            [
+                "7e90fa78a4bdf61a"
+            ]
+        ]
+    },
+    {
+        "id": "e3fdfa88853004e5",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "temperature treshold exceeded",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.threshold_exceeded.temperature",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 560,
+        "wires": [
+            [
+                "7ab3f5d33e6e6b10"
+            ]
+        ]
+    },
+    {
+        "id": "5ad9808818e3e1c5",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "humidity threshold exceeded",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.threshold_exceeded.humidity",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 620,
+        "wires": [
+            [
+                "f14648d4e75035c0"
+            ]
+        ]
+    },
+    {
+        "id": "d2f86219f211e67c",
+        "type": "change",
+        "z": "4ce6f98c.254bf",
+        "name": "pressure thershold exceeded",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.threshold_exceeded.pressure",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 880,
+        "y": 680,
+        "wires": [
+            [
+                "7e90fa78a4bdf61a"
+            ]
+        ]
+    },
+    {
+        "id": "501e6b0482a06eda",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 2,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "ab49bc7b7e249056",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 4,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "d1273820beeeec2c",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 5,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "fd216f27629219ac",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 6,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "131081a372a662a2",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 7,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "68f453fc3b57895b",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 8,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "7142f044f65a20d0",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 10,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "c8e87bfdb3b8b2fc",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 12,
+        "width": 19,
+        "height": 1
+    },
+    {
+        "id": "91bcc10930b0c9e4",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 13,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "c4d07d2df200525c",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 15,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "a546d2d8b529c2f0",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 16,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "35840e7c0f5898eb",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 17,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "6482bcfb3a9752f2",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 18,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "d4d3ae22dc6408c5",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 19,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "7d736da5385468f4",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 20,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "07f5530d512ba3f8",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 21,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "408e529362c96be8",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 22,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "599f540b40d027ab",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 23,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "138686f982168ec6",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 24,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "2dd6db6b639aeafb",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 25,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "65aae05514126658",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 26,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "fea482b43a7a7b3f",
+        "type": "ui_spacer",
+        "z": "4ce6f98c.254bf",
+        "name": "spacer",
+        "group": "1bb2d88d.8be177",
+        "order": 28,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "1bb2d88d.8be177",
+        "type": "ui_group",
+        "name": "BME280 Sensors",
+        "tab": "88fe602a.e1955",
+        "order": 1,
+        "disp": true,
+        "width": 19,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "471463a7deecd0d2",
+        "type": "mqtt-broker",
+        "name": "ssl_mutual_auth test.mosquitto.org",
+        "broker": "test.mosquitto.org",
+        "port": "8884",
+        "tls": "8e403a4a3faadc4e",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "88fe602a.e1955",
+        "type": "ui_tab",
+        "name": "BME280",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "8e403a4a3faadc4e",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "mosquitto.org.crt",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    }
+]
