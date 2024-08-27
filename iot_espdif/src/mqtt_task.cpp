@@ -8,6 +8,14 @@ static int s_retry_num = 0;
 esp_mqtt_client_handle_t client;
 bool isMQTTconnected = false;
 
+struct params
+{
+    EnvSensBME280Drv *bme;
+    LedWS2812BDrv *led;
+};
+
+LedWS2812BDrv *T_LedStrip;
+
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
 
@@ -128,10 +136,52 @@ static void log_error_if_nonzero(const char *message, int error_code)
     }
 }
 
+static void parseJSONdata(char *data)
+{
+    cJSON *root = cJSON_Parse(data);
+    cJSON *threshold = cJSON_GetObjectItem(root, "threshold_exceeded");
+    bool tempThreshold = cJSON_GetObjectItem(threshold, "temperature")->valueint;
+    bool humThreshold = cJSON_GetObjectItem(threshold, "humidity")->valueint;
+    bool presThreshold = cJSON_GetObjectItem(threshold, "pressure")->valueint;
+    // printf("temp %d, hum %d, pres %d\n", tempThreshold, humThreshold, presThreshold);
+    T_LedStrip->led_strip_clear();
+    T_LedStrip->led_strip_set_pixel_rgb(7, 0, 10, 0);
+
+    if (tempThreshold)
+    {
+        T_LedStrip->led_strip_set_pixel_rgb(0, 10, 0, 0);
+    }
+    else
+    {
+        T_LedStrip->led_strip_set_pixel_rgb(0, 0, 0, 0);
+    }
+
+    if (humThreshold)
+    {
+        T_LedStrip->led_strip_set_pixel_rgb(1, 10, 0, 0);
+    }
+    else
+    {
+        T_LedStrip->led_strip_set_pixel_rgb(1, 0, 0, 0);
+    }
+
+    if (presThreshold)
+    {
+        T_LedStrip->led_strip_set_pixel_rgb(2, 10, 0, 0);
+    }
+    else
+    {
+        T_LedStrip->led_strip_set_pixel_rgb(2, 0, 0, 0);
+    }
+
+    T_LedStrip->led_strip_show();
+}
+
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
     ESP_LOGD(TAG_M, "Event dispatched from event loop base=%s, event_id=%" PRIi32 "", base, event_id);
     esp_mqtt_event_handle_t event = static_cast<esp_mqtt_event_t *>(event_data);
+    int msg_id = {0};
 
     switch (static_cast<esp_mqtt_event_id_t>(event_id))
     {
@@ -141,9 +191,16 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     case MQTT_EVENT_CONNECTED:
         ESP_LOGI(TAG_M, "MQTT_EVENT_CONNECTED");
         isMQTTconnected = true;
+        T_LedStrip->led_strip_clear();
+        T_LedStrip->led_strip_set_pixel_rgb(7, 0, 10, 0);
+        T_LedStrip->led_strip_show();
+        msg_id = esp_mqtt_client_subscribe(client, "/topic/iot_node_red", 0);
+        ESP_LOGI(TAG_M, "sent subscribe successful, msg_id=%d", msg_id);
         break;
     case MQTT_EVENT_DISCONNECTED:
         ESP_LOGI(TAG_M, "MQTT_EVENT_DISCONNECTED");
+        T_LedStrip->led_strip_clear();
+        T_LedStrip->led_strip_show();
         isMQTTconnected = false;
         break;
     case MQTT_EVENT_SUBSCRIBED:
@@ -159,6 +216,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         ESP_LOGI(TAG_M, "MQTT_EVENT_DATA");
         printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
         printf("DATA=%.*s\r\n", event->data_len, event->data);
+        parseJSONdata(event->data);
         break;
     case MQTT_EVENT_ERROR:
         ESP_LOGI(TAG_M, "MQTT_EVENT_ERROR");
@@ -264,7 +322,10 @@ void myMQTTtask(void *pvParameters)
 
     int msg_id = {0};
 
-    EnvSensBME280Drv *bme = static_cast<EnvSensBME280Drv *>(pvParameters);
+    params *pv = static_cast<params *>(pvParameters);
+
+    EnvSensBME280Drv *bme = pv->bme;
+    T_LedStrip = pv->led;
 
     vTaskDelay(2000 / portTICK_PERIOD_MS);
 

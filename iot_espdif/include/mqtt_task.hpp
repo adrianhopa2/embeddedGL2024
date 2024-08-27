@@ -24,13 +24,14 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-
 #include "esp_log.h"
 #include "mqtt_client.h"
 
 #include "env_sens_bme280_drv.hpp"
+#include "led_ws2812b_drv.hpp"
 
 #include <string>
+#include <cJSON.h>
 
 #define EXAMPLE_ESP_WIFI_SSID "SA52_S"
 #define EXAMPLE_ESP_WIFI_PASS "nokia123"
