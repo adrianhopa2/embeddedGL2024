@@ -2,10 +2,12 @@
 #include <freertos/task.h>
 
 #include "env_sens_bme280_drv.hpp"
-#include "led_ws2812b_drv.hpp"
+#include "led_strip_ws2812b_drv.hpp"
+#include "led_strip_base.hpp"
 
 #include "env_sens_task.hpp"
 #include "mqtt_task.hpp"
+#include "led_strip_task.hpp"
 
 #define SCL_IO_PIN GPIO_NUM_22
 #define SDA_IO_PIN GPIO_NUM_21
@@ -40,7 +42,6 @@ extern "C"
         static struct led_color_t led_strip_buf_2[LED_STRIP_LENGTH];
 
         static struct led_strip_t led_strip = {
-            .rgb_led_type = RGB_LED_TYPE_WS2812,
             .led_strip_length = LED_STRIP_LENGTH,
             .rmt_interrupt_num = LED_STRIP_RMT_INTR_NUM,
             .gpio = GPIO_NUM_13,
@@ -49,33 +50,29 @@ extern "C"
         };
         led_strip.access_semaphore = xSemaphoreCreateBinary();
 
-        static LedWS2812BDrv LedStrip(&led_strip);
+        static LedStripWS2812BDrv ws2812b1;
+        static LedStrip ledStrip1(ws2812b1, &led_strip);
 
-        bool led_init_ok = LedStrip.led_strip_init();
+        bool led_init_ok = ledStrip1.init();
 
         if (led_init_ok)
         {
-            LedStrip.led_strip_clear();
-            LedStrip.led_strip_set_pixel_rgb(7, 0, 0, 10);
-            LedStrip.led_strip_show();
-
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
-
-            LedStrip.led_strip_clear();
-            LedStrip.led_strip_show();
+            printf("LED STRIP INITIALIZED\n");
+            xTaskCreate(&led_strip_task, "LedStripTask", LED_STRIP_TASK_SIZE, &ledStrip1, LED_STRIP_TASK_PRIORITY, NULL);
+            printf("LED STRIP TASK STARTED\n");
+            ledStrip1.clear();
+            ledStrip1.set_pixel_rgb(0, 15, 0, 15);
+            ledStrip1.show();
+            //vTaskDelay(2000 / portTICK_PERIOD_MS);
         }
-
-        struct params
-        {
-            EnvSensBME280Drv *bme;
-            LedWS2812BDrv *led;
-        };
 
         static params p;
         p.bme = &bme280;
-        p.led = &LedStrip;
+        p.led = &ledStrip1;
 
         xTaskCreate(&myEnvSensTask, "EnvSensTask", 2048, &bme280, 5, NULL);
+        printf("ENV SENS TASK STARTED\n");
         xTaskCreate(&myMQTTtask, "TaskMQTT", 4096, &p, 5, NULL);
+        printf("MQTT TASK STARTED\n");
     }
 }

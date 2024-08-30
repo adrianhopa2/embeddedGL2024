@@ -8,13 +8,7 @@ static int s_retry_num = 0;
 esp_mqtt_client_handle_t client;
 bool isMQTTconnected = false;
 
-struct params
-{
-    EnvSensBME280Drv *bme;
-    LedWS2812BDrv *led;
-};
-
-LedWS2812BDrv *T_LedStrip;
+LedStrip *T_LedStrip;
 
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
@@ -144,37 +138,37 @@ static void parseJSONdata(char *data)
     bool humThreshold = cJSON_GetObjectItem(threshold, "humidity")->valueint;
     bool presThreshold = cJSON_GetObjectItem(threshold, "pressure")->valueint;
     // printf("temp %d, hum %d, pres %d\n", tempThreshold, humThreshold, presThreshold);
-    T_LedStrip->led_strip_clear();
-    T_LedStrip->led_strip_set_pixel_rgb(7, 0, 10, 0);
+    T_LedStrip->clear();
+    T_LedStrip->set_pixel_rgb(7, 0, 10, 0);
 
     if (tempThreshold)
     {
-        T_LedStrip->led_strip_set_pixel_rgb(0, 10, 0, 0);
+        T_LedStrip->set_pixel_rgb(0, 10, 0, 0);
     }
     else
     {
-        T_LedStrip->led_strip_set_pixel_rgb(0, 0, 0, 0);
+        T_LedStrip->set_pixel_rgb(0, 0, 0, 0);
     }
 
     if (humThreshold)
     {
-        T_LedStrip->led_strip_set_pixel_rgb(1, 10, 0, 0);
+        T_LedStrip->set_pixel_rgb(1, 10, 0, 0);
     }
     else
     {
-        T_LedStrip->led_strip_set_pixel_rgb(1, 0, 0, 0);
+        T_LedStrip->set_pixel_rgb(1, 0, 0, 0);
     }
 
     if (presThreshold)
     {
-        T_LedStrip->led_strip_set_pixel_rgb(2, 10, 0, 0);
+        T_LedStrip->set_pixel_rgb(2, 10, 0, 0);
     }
     else
     {
-        T_LedStrip->led_strip_set_pixel_rgb(2, 0, 0, 0);
+        T_LedStrip->set_pixel_rgb(2, 0, 0, 0);
     }
 
-    T_LedStrip->led_strip_show();
+    T_LedStrip->show();
 }
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
@@ -191,16 +185,16 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     case MQTT_EVENT_CONNECTED:
         ESP_LOGI(TAG_M, "MQTT_EVENT_CONNECTED");
         isMQTTconnected = true;
-        T_LedStrip->led_strip_clear();
-        T_LedStrip->led_strip_set_pixel_rgb(7, 0, 10, 0);
-        T_LedStrip->led_strip_show();
+        T_LedStrip->clear();
+        T_LedStrip->set_pixel_rgb(7, 0, 10, 0);
+        T_LedStrip->show();
         msg_id = esp_mqtt_client_subscribe(client, "/topic/iot_node_red", 0);
         ESP_LOGI(TAG_M, "sent subscribe successful, msg_id=%d", msg_id);
         break;
     case MQTT_EVENT_DISCONNECTED:
         ESP_LOGI(TAG_M, "MQTT_EVENT_DISCONNECTED");
-        T_LedStrip->led_strip_clear();
-        T_LedStrip->led_strip_show();
+        T_LedStrip->clear();
+        T_LedStrip->show();
         isMQTTconnected = false;
         break;
     case MQTT_EVENT_SUBSCRIBED:

@@ -28,7 +28,7 @@
 #include "mqtt_client.h"
 
 #include "env_sens_bme280_drv.hpp"
-#include "led_ws2812b_drv.hpp"
+#include "led_strip_base.hpp"
 
 #include <string>
 #include <cJSON.h>
@@ -60,6 +60,13 @@
  * - we failed to connect after the maximum amount of retries */
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT BIT1
+
+
+struct params
+{
+    EnvSensBME280Drv *bme;
+    LedStrip *led;
+};
 
 
 void myMQTTtask(void *pvParameters);
