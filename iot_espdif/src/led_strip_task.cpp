@@ -2,9 +2,9 @@
 
 void led_strip_task(void *arg)
 {
-    LedStrip* strip = static_cast<LedStrip*>(arg);
-    struct led_strip_t* led_strip = strip->getStrip();
-    
+    LedStrip *strip = static_cast<LedStrip *>(arg);
+    struct led_strip_t *led_strip = strip->getStrip();
+
     bool make_new_rmt_items = true;
     bool prev_showing_buf_1 = !led_strip->showing_buf_1;
 
@@ -14,7 +14,6 @@ void led_strip_task(void *arg)
     {
         vTaskDelete(NULL);
     }
-    
 
     for (;;)
     {
@@ -42,14 +41,7 @@ void led_strip_task(void *arg)
 
         if (make_new_rmt_items)
         {
-            if (led_strip->showing_buf_1)
-            {
-                strip->fill_rmt_items_buf1(rmt_items);
-            }
-            else
-            {
-                strip->fill_rmt_items_buf2(rmt_items);
-            }
+            strip->fill_rmt_items(rmt_items);
         }
 
         rmt_write_items(led_strip->rmt_channel, rmt_items, num_items_malloc, false);

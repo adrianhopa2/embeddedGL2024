@@ -13,7 +13,6 @@ LedStrip::LedStrip(ILedStripDrv &driver, led_strip_t *led_strip) : ledStripDrive
     ledStripConfig.access_semaphore = led_strip->access_semaphore;
 
     m_led_strip_ok = true;
-
 }
 
 bool LedStrip::init()
@@ -146,12 +145,14 @@ led_strip_t *LedStrip::getStrip()
     return &ledStripConfig;
 }
 
-void LedStrip::fill_rmt_items_buf1(rmt_item32_t *rmt_items)
+void LedStrip::fill_rmt_items(rmt_item32_t *rmt_items)
 {
-    ledStripDriver.fill_rmt_items(ledStripConfig.led_strip_buf_1, rmt_items, ledStripConfig.led_strip_length);
-}
-
-void LedStrip::fill_rmt_items_buf2(rmt_item32_t *rmt_items)
-{
-    ledStripDriver.fill_rmt_items(ledStripConfig.led_strip_buf_2, rmt_items, ledStripConfig.led_strip_length);
+    if (ledStripConfig.showing_buf_1)
+    {
+        ledStripDriver.fill_rmt_items(ledStripConfig.led_strip_buf_1, rmt_items, ledStripConfig.led_strip_length);
+    }
+    else
+    {
+        ledStripDriver.fill_rmt_items(ledStripConfig.led_strip_buf_2, rmt_items, ledStripConfig.led_strip_length);
+    }
 }

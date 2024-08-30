@@ -41,9 +41,7 @@ public:
 
     led_strip_t* getStrip();
 
-    void fill_rmt_items_buf1(rmt_item32_t *rmt_items);
-
-    void fill_rmt_items_buf2(rmt_item32_t *rmt_items);
+    void fill_rmt_items(rmt_item32_t *rmt_items);
 
     ~LedStrip() {};
 };
