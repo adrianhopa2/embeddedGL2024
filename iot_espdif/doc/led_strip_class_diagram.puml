@@ -1,0 +1,52 @@
+@startuml led_strip_class_diagram
+
+interface ILedStripDrv
+{
+    {abstract} +void fill_rmt_items(led_color_t *led_strip_buf, rmt_item32_t *rmt_items, uint32_t led_strip_length)
+
+    {abstract} +~ILedStripDrv()
+
+}
+
+interface ILedStrip
+{
+    {abstract} +bool init()
+    {abstract} +bool set_pixel_rgb(uint32_t pixel_num, uint8_t red, uint8_t green, uint8_t blue)
+    {abstract} +bool show()
+    {abstract} +bool clear()
+
+    {abstract} +~ILedStrip()
+}
+
+class LedStripWS2812BDrv implements ILedStripDrv
+{
+    +LedStripWS2812BDrv()
+    +void fill_rmt_items(led_color_t *led_strip_buf, rmt_item32_t *rmt_items, uint32_t led_strip_length)
+
+    +~LedStripWS2812BDrv()
+}
+
+class LedStrip implements ILedStrip
+{
+    -struct led_strip_t ledStripConfig
+    -bool m_led_strip_ok
+    -ILedStripDrv& ledStripDriver
+
+    +LedStrip(ILedStripDrv& driver, struct led_strip_t *config)
+
+    +bool init()
+    +bool set_pixel_rgb(uint32_t pixel_num, uint8_t red, uint8_t green, uint8_t blue)
+    +bool show()
+    +bool clear()
+
+    +led_strip_t* getStrip()
+    +void fill_rmt_items(rmt_item32_t *rmt_items)
+
+    +~LedStrip()
+}
+
+hide ILedStripDrv fields
+hide ILedStrip fields
+hide LedStripWS2812BDrv fields
+
+@enduml

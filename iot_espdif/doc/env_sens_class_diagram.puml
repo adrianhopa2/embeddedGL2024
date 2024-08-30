@@ -1,4 +1,4 @@
-@startuml diagram
+@startuml env_sens_class_diagram
 
 interface IEnvSensDrv
 {
@@ -79,5 +79,7 @@ class EnvSensBMP280Drv implements IEnvSensDrv
 
     +~EnvSensBMP280Drv()
 }
+
+hide IEnvSensDrv fields
 
 @enduml
