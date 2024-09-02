@@ -49,4 +49,6 @@ hide ILedStripDrv fields
 hide ILedStrip fields
 hide LedStripWS2812BDrv fields
 
+LedStrip --> ILedStripDrv
+
 @enduml
