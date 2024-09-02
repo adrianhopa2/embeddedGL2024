@@ -78,6 +78,9 @@ The UI consists of charts displaying measurements and sliders for setting thresh
 * PlatformIO IDE for VSCode to compile the project code<br>
 * node-red for user interface<br>
 
+## Getting Started
+
+https://platformio.org/install/ide?install=vscode
 
 
 ## Version History
