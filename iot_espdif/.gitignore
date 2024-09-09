@@ -3,7 +3,3 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-src/ssl_cert/client.csr
-src/ssl_cert/client.crt
-src/ssl_cert/client.key
-src/ssl_cert/mosquitto.org.crt
