@@ -15,9 +15,12 @@ void led_strip_task(void *arg)
         vTaskDelete(NULL);
     }
 
+    RmtWrapper rmtwrapper;
+
     for (;;)
     {
-        rmt_wait_tx_done(led_strip->rmt_channel, portMAX_DELAY);
+        //rmt_wait_tx_done(led_strip->rmt_channel, portMAX_DELAY);
+        rmtwrapper.wait_tx_done(led_strip->rmt_channel, portMAX_DELAY);
         xSemaphoreTake(led_strip->access_semaphore, portMAX_DELAY);
 
         /*
@@ -44,7 +47,8 @@ void led_strip_task(void *arg)
             strip->fill_rmt_items(rmt_items);
         }
 
-        rmt_write_items(led_strip->rmt_channel, rmt_items, num_items_malloc, false);
+        //rmt_write_items(led_strip->rmt_channel, rmt_items, num_items_malloc, false);
+        rmtwrapper.write_items(led_strip->rmt_channel, rmt_items, num_items_malloc, false);
         prev_showing_buf_1 = led_strip->showing_buf_1;
         xSemaphoreGive(led_strip->access_semaphore);
         vTaskDelay(LED_STRIP_REFRESH_PERIOD_MS / portTICK_PERIOD_MS);

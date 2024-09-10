@@ -1,7 +1,7 @@
 #ifndef _LED_STRIP_DRV_INTERFACE_H
 #define _LED_STRIP_DRV_INTERFACE_H
 
-#include <driver/rmt.h>
+#include "rmt_wrapper.hpp"
 
 struct led_strip_t {
     uint32_t led_strip_length;
@@ -36,8 +36,8 @@ struct led_color_t {
 
 class ILedStripDrv
 {
-
 public:
+
     virtual void fill_rmt_items(led_color_t *led_strip_buf, rmt_item32_t *rmt_items, uint32_t led_strip_length) = 0;
 
     virtual ~ILedStripDrv() {};

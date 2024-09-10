@@ -10,15 +10,20 @@ TEST(DummyTest, ShouldPass)
     EXPECT_EQ(1, 1);
 }
 
-int app_main(int argc, char **argv)
+extern "C"
 {
-    //::testing::InitGoogleTest(&argc, argv);
-    // if you plan to use GMock, replace the line above with
-    ::testing::InitGoogleMock(&argc, argv);
+    int app_main(void)
+    {
+        //::testing::InitGoogleTest(&argc, argv);
+        // if you plan to use GMock, replace the line above with
+        ::testing::InitGoogleMock();
 
-    if (RUN_ALL_TESTS())
-        ;
+        if (RUN_ALL_TESTS())
+        {
+            ;
+        }
 
-    // Always return zero-code and allow PlatformIO to parse results
-    return 0;
+        // Always return zero-code and allow PlatformIO to parse results
+        return 0;
+    }
 }

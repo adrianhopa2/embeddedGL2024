@@ -63,7 +63,11 @@ extern "C"
             ledStrip1.clear();
             ledStrip1.set_pixel_rgb(0, 15, 0, 15);
             ledStrip1.show();
-            //vTaskDelay(2000 / portTICK_PERIOD_MS);
+            vTaskDelay(2000 / portTICK_PERIOD_MS);
+            ledStrip1.clear();
+            ledStrip1.set_pixel_rgb(1, 0, 20, 0);
+            ledStrip1.show();
+            vTaskDelay(2000 / portTICK_PERIOD_MS);
         }
 
         static params p;
