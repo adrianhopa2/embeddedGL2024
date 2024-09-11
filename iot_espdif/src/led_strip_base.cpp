@@ -1,6 +1,6 @@
 #include "led_strip_base.hpp"
 
-LedStrip::LedStrip(ILedStripDrv &driver, led_strip_t *led_strip) : ledStripDriver(driver)
+LedStrip::LedStrip(ILedStripDrv &driver, led_strip_t *led_strip, RmtWrapper &rmtwrapper) : ledStripDriver(driver), m_rmtwrapper(rmtwrapper)
 {
 
     ledStripConfig.led_strip_length = led_strip->led_strip_length;
@@ -17,8 +17,6 @@ LedStrip::LedStrip(ILedStripDrv &driver, led_strip_t *led_strip) : ledStripDrive
 
 bool LedStrip::init()
 {
-    RmtWrapper rmtwrapper;
-
     if (!m_led_strip_ok ||
         (ledStripConfig.rmt_channel == RMT_CHANNEL_MAX) ||
         (ledStripConfig.gpio > GPIO_NUM_33) || // only inputs above 33
@@ -54,13 +52,13 @@ bool LedStrip::init()
             .idle_output_en = true,
         }};
 
-    esp_err_t cfg_ok = rmtwrapper.config(&rmt_cfg);
+    esp_err_t cfg_ok = m_rmtwrapper.config(&rmt_cfg);
     if (cfg_ok != ESP_OK)
     {
         return false;
     }
 
-    esp_err_t install_ok = rmtwrapper.driver_install(rmt_cfg.channel, 0, 0);
+    esp_err_t install_ok = m_rmtwrapper.driver_install(rmt_cfg.channel, 0, 0);
     if (install_ok != ESP_OK)
     {
         return false;
@@ -157,4 +155,14 @@ void LedStrip::fill_rmt_items(rmt_item32_t *rmt_items)
     {
         ledStripDriver.fill_rmt_items(ledStripConfig.led_strip_buf_2, rmt_items, ledStripConfig.led_strip_length);
     }
+}
+
+esp_err_t LedStrip::wait_tx_done(rmt_channel_t channel, TickType_t wait_time)
+{
+    return m_rmtwrapper.wait_tx_done(channel, wait_time);
+}
+
+esp_err_t LedStrip::write_items(rmt_channel_t channel, const rmt_item32_t *rmt_item, int item_num, bool wait_tx_done)
+{
+    return m_rmtwrapper.write_items(channel, rmt_item, item_num, wait_tx_done);
 }

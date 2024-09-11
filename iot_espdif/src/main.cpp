@@ -15,7 +15,7 @@
 
 extern "C"
 {
-    void app_main(void)
+    int app_main(void)
     {
         i2c_master_bus_config_t i2c_bus_config = {
             .i2c_port = PORT_NUMBER,
@@ -38,7 +38,7 @@ extern "C"
             .humidity_oversampling = 0b001,
         };
 
-        static EnvSensBME280Drv bme280(&bme280_config, bus_handle);
+        static EnvSensBME280Drv bme280(&bme280_config, bus_handle, i2cmasterwrapper);
 
         static struct led_color_t led_strip_buf_1[LED_STRIP_LENGTH];
         static struct led_color_t led_strip_buf_2[LED_STRIP_LENGTH];
@@ -52,8 +52,10 @@ extern "C"
         };
         led_strip.access_semaphore = xSemaphoreCreateBinary();
 
+        RmtWrapper rmtwrapper;
+
         static LedStripWS2812BDrv ws2812b1;
-        static LedStrip ledStrip1(ws2812b1, &led_strip);
+        static LedStrip ledStrip1(ws2812b1, &led_strip, rmtwrapper);
 
         bool led_init_ok = ledStrip1.init();
 
@@ -74,5 +76,7 @@ extern "C"
         printf("ENV SENS TASK STARTED\n");
         xTaskCreate(&myMQTTtask, "TaskMQTT", 4096, &p, 5, NULL);
         printf("MQTT TASK STARTED\n");
+
+        return 0;
     }
 }

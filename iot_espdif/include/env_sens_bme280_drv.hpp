@@ -47,9 +47,10 @@ private:
     int32_t m_temperature;
     uint32_t m_pressure;
     uint32_t m_humidity;
+    I2cMasterWrapper m_i2cmasterwrapper;
 
 public:
-    EnvSensBME280Drv(bme280_config_t *bme280_config, i2c_master_bus_handle_t bus_handle);
+    EnvSensBME280Drv(bme280_config_t *bme280_config, i2c_master_bus_handle_t bus_handle, I2cMasterWrapper &i2cmasterwrapper);
 
     return_code init() override;
     return_code startContinuousMeasurements() override;

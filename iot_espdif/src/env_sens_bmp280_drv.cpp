@@ -1,6 +1,7 @@
 #include "env_sens_bmp280_drv.hpp"
 
-EnvSensBMP280Drv::EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle)
+EnvSensBMP280Drv::EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle, I2cMasterWrapper &i2cmasterwrapper) 
+: m_bus_handle(bus_handle), m_i2cmasterwrapper(i2cmasterwrapper)
 {
     m_bmp280_config = {
         .standby_time = bmp280_config->standby_time,
@@ -8,8 +9,6 @@ EnvSensBMP280Drv::EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bu
         .pressure_oversampling = bmp280_config->pressure_oversampling,
         .temperature_oversampling = bmp280_config->temperature_oversampling,
     };
-
-    m_bus_handle = bus_handle;
 
     m_temperature = 0;
     m_pressure = 0;
@@ -21,8 +20,6 @@ return_code EnvSensBMP280Drv::init()
 {
     m_state = idle;
 
-    I2cMasterWrapper i2cmasterwrapper;
-
     i2c_device_config_t dev_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
         .device_address = 0x76,
@@ -33,7 +30,7 @@ return_code EnvSensBMP280Drv::init()
         },
     };
 
-    if (i2cmasterwrapper.bus_add_device(m_bus_handle, &dev_cfg, &m_dev_handle))
+    if (m_i2cmasterwrapper.bus_add_device(m_bus_handle, &dev_cfg, &m_dev_handle))
     {
         m_state = error;
         return m_state;
@@ -44,7 +41,7 @@ return_code EnvSensBMP280Drv::init()
 
     buffer_config[0] = 0xF5;
     buffer_config[1] = ((m_bmp280_config.standby_time << 5) | (m_bmp280_config.filter_coefficient << 2));
-    if (i2cmasterwrapper.transmit(m_dev_handle, buffer_config, 2, -1))
+    if (m_i2cmasterwrapper.transmit(m_dev_handle, buffer_config, 2, -1))
     {
         m_state = error;
         return m_state;
@@ -52,7 +49,7 @@ return_code EnvSensBMP280Drv::init()
 
     buffer_ctrl_meas[0] = 0xF4;
     buffer_ctrl_meas[1] = ((m_bmp280_config.temperature_oversampling << 5) | (m_bmp280_config.pressure_oversampling << 2));
-    if (i2cmasterwrapper.transmit(m_dev_handle, buffer_ctrl_meas, 2, -1))
+    if (m_i2cmasterwrapper.transmit(m_dev_handle, buffer_ctrl_meas, 2, -1))
     {
         m_state = error;
         return m_state;
@@ -61,7 +58,7 @@ return_code EnvSensBMP280Drv::init()
     uint8_t reg_addr[1] = {0x88};
     uint8_t reg_calib_data[24] = {0};
 
-    if (i2cmasterwrapper.transmit_receive(m_dev_handle, reg_addr, 1, reg_calib_data, 24, -1) != ESP_OK)
+    if (m_i2cmasterwrapper.transmit_receive(m_dev_handle, reg_addr, 1, reg_calib_data, 24, -1) != ESP_OK)
     {
         m_state = error;
     }
@@ -94,9 +91,7 @@ return_code EnvSensBMP280Drv::startContinuousMeasurements()
     buffer[0] = 0xF4;
     buffer[1] = ((m_bmp280_config.temperature_oversampling << 5) | (m_bmp280_config.pressure_oversampling << 2) | mode);
 
-    I2cMasterWrapper i2cmasterwrapper;
-
-    if (i2cmasterwrapper.transmit(m_dev_handle, buffer, 2, -1) == ESP_OK)
+    if (m_i2cmasterwrapper.transmit(m_dev_handle, buffer, 2, -1) == ESP_OK)
     {
         m_state = busy;
         return ok;
@@ -116,9 +111,7 @@ return_code EnvSensBMP280Drv::startSingleMeasurement()
     buffer[0] = 0xF4;
     buffer[1] = ((m_bmp280_config.temperature_oversampling << 5) | (m_bmp280_config.pressure_oversampling << 2) | mode);
 
-     I2cMasterWrapper i2cmasterwrapper;   
-
-    if (i2cmasterwrapper.transmit(m_dev_handle, buffer, 2, -1) == ESP_OK)
+    if (m_i2cmasterwrapper.transmit(m_dev_handle, buffer, 2, -1) == ESP_OK)
     {
         m_state = busy;
         return ok;
@@ -136,11 +129,9 @@ return_code EnvSensBMP280Drv::stopMeasuring()
     uint8_t mode = 0b00;
 
     buffer[0] = 0xF4;
-    buffer[1] = ((m_bmp280_config.temperature_oversampling << 5) | (m_bmp280_config.pressure_oversampling << 2) | mode);
+    buffer[1] = ((m_bmp280_config.temperature_oversampling << 5) | (m_bmp280_config.pressure_oversampling << 2) | mode); 
 
-    I2cMasterWrapper i2cmasterwrapper; 
-
-    if (i2cmasterwrapper.transmit(m_dev_handle, buffer, 2, -1) == ESP_OK)
+    if (m_i2cmasterwrapper.transmit(m_dev_handle, buffer, 2, -1) == ESP_OK)
     {
         m_state = idle;
         return ok;
@@ -180,9 +171,7 @@ void EnvSensBMP280Drv::process()
     uint8_t buffer[1];
     bool is_sensor_measuring = false;
 
-    I2cMasterWrapper i2cmasterwrapper;
-
-    i2cmasterwrapper.transmit_receive(m_dev_handle, addr, 1, buffer, 1, -1);
+    m_i2cmasterwrapper.transmit_receive(m_dev_handle, addr, 1, buffer, 1, -1);
 
     if (buffer[0] & 0b00001000 || buffer[0] & 0b00000001)
     {
@@ -196,7 +185,7 @@ void EnvSensBMP280Drv::process()
         uint8_t addr[1] = {0xF7};
         uint8_t buffer[6];
 
-        if (i2cmasterwrapper.transmit_receive(m_dev_handle, addr, 1, buffer, 6, -1) != ESP_OK)
+        if (m_i2cmasterwrapper.transmit_receive(m_dev_handle, addr, 1, buffer, 6, -1) != ESP_OK)
         {
             m_state = error;
             return;

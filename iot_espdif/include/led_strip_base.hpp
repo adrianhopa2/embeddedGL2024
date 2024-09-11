@@ -19,17 +19,16 @@
 #define LED_STRIP_LENGTH 8U
 #define LED_STRIP_RMT_INTR_NUM 19U
 
-
-
 class LedStrip : public ILedStrip
 {
 private:
     struct led_strip_t ledStripConfig;
     bool m_led_strip_ok;
-    ILedStripDrv& ledStripDriver;
+    ILedStripDrv &ledStripDriver;
+    RmtWrapper m_rmtwrapper;
 
 public:
-    LedStrip(ILedStripDrv& driver, struct led_strip_t *config);
+    LedStrip(ILedStripDrv &driver, struct led_strip_t *config, RmtWrapper &rmtwrapper);
 
     bool init() override;
 
@@ -39,7 +38,11 @@ public:
 
     bool clear() override;
 
-    led_strip_t* getStrip();
+    led_strip_t *getStrip();
+
+    esp_err_t wait_tx_done(rmt_channel_t channel, TickType_t wait_time);
+
+    esp_err_t write_items(rmt_channel_t channel, const rmt_item32_t *rmt_item, int item_num, bool wait_tx_done);
 
     void fill_rmt_items(rmt_item32_t *rmt_items);
 

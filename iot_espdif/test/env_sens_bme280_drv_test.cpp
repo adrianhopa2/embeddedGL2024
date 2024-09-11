@@ -1,14 +1,24 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "env_sens_bme280_drv.hpp"
 #include "mock/i2c_master_wrapper_mock.hpp"
 
 using ::testing::_;
+using ::testing::Return;
 
-TEST(bme280test, i2cbustest)
+class Bme280I2cTest : public ::testing::Test
 {
-    MockI2cMasterWrapper i2cmastermock;
+public:
+    virtual void SetUp()
+    {
+        i2cmaster = std::make_unique<::testing::StrictMock<MockI2cMasterWrapper>>();
+    }
 
-    EXPECT_CALL(i2cmastermock, bus_add_device(_, _, _));
+protected:
+    std::unique_ptr<::testing::StrictMock<MockI2cMasterWrapper>> i2cmaster;
+};
+
+TEST_F(Bme280I2cTest, i2cbustest)
+{
+    EXPECT_CALL(*i2cmaster, transmit(_,_,_,_)).Times(3).WillOnce(Return(ESP_OK));
 }
