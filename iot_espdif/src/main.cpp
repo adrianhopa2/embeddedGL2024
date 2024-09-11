@@ -26,7 +26,9 @@ extern "C"
         };
         i2c_master_bus_handle_t bus_handle;
 
-        ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_config, &bus_handle));
+        I2cMasterWrapper i2cmasterwrapper;
+
+        ESP_ERROR_CHECK(i2cmasterwrapper.new_bus(&i2c_bus_config, &bus_handle));
 
         bme280_config_t bme280_config = {
             .standby_time = 0b011,
@@ -61,13 +63,7 @@ extern "C"
             xTaskCreate(&led_strip_task, "LedStripTask", LED_STRIP_TASK_SIZE, &ledStrip1, LED_STRIP_TASK_PRIORITY, NULL);
             printf("LED STRIP TASK STARTED\n");
             ledStrip1.clear();
-            ledStrip1.set_pixel_rgb(0, 15, 0, 15);
             ledStrip1.show();
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
-            ledStrip1.clear();
-            ledStrip1.set_pixel_rgb(1, 0, 20, 0);
-            ledStrip1.show();
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
         }
 
         static params p;

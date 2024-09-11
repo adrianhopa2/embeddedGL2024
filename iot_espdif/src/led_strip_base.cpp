@@ -54,13 +54,12 @@ bool LedStrip::init()
             .idle_output_en = true,
         }};
 
-    //esp_err_t cfg_ok = rmt_config(&rmt_cfg);
     esp_err_t cfg_ok = rmtwrapper.config(&rmt_cfg);
     if (cfg_ok != ESP_OK)
     {
         return false;
     }
-    //esp_err_t install_ok = rmt_driver_install(rmt_cfg.channel, 0, 0);
+
     esp_err_t install_ok = rmtwrapper.driver_install(rmt_cfg.channel, 0, 0);
     if (install_ok != ESP_OK)
     {

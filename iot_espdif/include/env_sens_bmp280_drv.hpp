@@ -1,7 +1,7 @@
 #ifndef _ENV_SENS_BMP280_DRV_H
 #define _ENV_SENS_BMP280_DRV_H
 
-#include <driver/i2c_master.h>
+#include "i2c_master_wrapper.hpp"
 #include "env_sens_drv_interface.hpp"
 
 typedef struct bmp280_config_t
