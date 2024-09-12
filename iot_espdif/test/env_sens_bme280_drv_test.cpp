@@ -40,6 +40,6 @@ TEST(bme280test, i2cbustest)
 
     EnvSensBME280DrvTest driver(&bme280_config, bus_handle, i2cmaster);
 
-    EXPECT_CALL(i2cmaster, transmit(_, _, _, _)).Times(3).WillOnce(Return(ESP_OK));
+    EXPECT_CALL(i2cmaster, transmit(_, _, _, _)).Times(3).WillRepeatedly(Return(ESP_OK));
     EXPECT_EQ(driver.init(), idle);
 }
