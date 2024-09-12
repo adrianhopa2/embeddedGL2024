@@ -14,6 +14,11 @@ public:
         i2cmaster = std::make_unique<::testing::StrictMock<MockI2cMasterWrapper>>();
     }
 
+    virtual void TearDown()
+    {
+        i2cmaster.reset();
+    }
+
 protected:
     std::unique_ptr<::testing::StrictMock<MockI2cMasterWrapper>> i2cmaster;
 };
