@@ -137,7 +137,7 @@ static void parseJSONdata(char *data)
     bool tempThreshold = cJSON_GetObjectItem(threshold, "temperature")->valueint;
     bool humThreshold = cJSON_GetObjectItem(threshold, "humidity")->valueint;
     bool presThreshold = cJSON_GetObjectItem(threshold, "pressure")->valueint;
-    // printf("temp %d, hum %d, pres %d\n", tempThreshold, humThreshold, presThreshold);
+
     T_LedStrip->clear();
     T_LedStrip->set_pixel_rgb(7, 0, 10, 0);
 
@@ -280,28 +280,14 @@ void myMQTTapp()
 #endif /* CONFIG_BROKER_URL_FROM_STDIN */
 
     client = esp_mqtt_client_init(&mqtt_cfg);
-    /* The last argument may be used to pass data to the event handler, in this example mqtt_event_handler */
+    
     esp_mqtt_client_register_event(client, MQTT_EVENT_ANY, mqtt_event_handler, NULL);
-
-    /*Let's enqueue a few messages to the outbox to see the allocations*/
-    // int msg_id;
-    //  msg_id = esp_mqtt_client_enqueue(client, "/topic_esp/qos1", "data_3", 0, 1, 0, true);
-    //  ESP_LOGI(TAG, "Enqueued msg_id=%d", msg_id);
-    //  msg_id = esp_mqtt_client_enqueue(client, "/topic_esp/qos2", "QoS2 message", 0, 2, 0, true);
-    //  ESP_LOGI(TAG, "Enqueued msg_id=%d", msg_id);
-
-    /* Now we start the client and it's possible to see the memory usage for the operations in the outbox. */
 
     esp_mqtt_client_start(client);
 }
 
 void myMQTTtask(void *pvParameters)
 {
-    // ESP_ERROR_CHECK(nvs_flash_init());
-    // ESP_ERROR_CHECK(esp_netif_init());
-    // ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-    // ESP_ERROR_CHECK(example_connect());
 
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)

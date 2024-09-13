@@ -39,10 +39,10 @@ private:
     return_code m_state;
     int32_t m_temperature;
     uint32_t m_pressure;
-    I2cMasterWrapper m_i2cmasterwrapper;
+    II2cMasterWrapper &m_ii2cmasterwrapper;
 
 public:
-    EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle, I2cMasterWrapper &i2cmasterwrapper);
+    EnvSensBMP280Drv(bmp280_config_t *bmp280_config, i2c_master_bus_handle_t bus_handle, II2cMasterWrapper &ii2cmasterwrapper);
 
     return_code init() override;
     return_code startContinuousMeasurements() override;

@@ -1,8 +1,8 @@
 #include <gmock/gmock.h>
 
-#include "i2c_master_wrapper.hpp"
+#include "i2c_master_wrapper_interface.hpp"
 
-class MockI2cMasterWrapper : public I2cMasterWrapper
+class MockI2cMasterWrapper : public II2cMasterWrapper
 {
 public:
     MOCK_METHOD(esp_err_t, bus_add_device, (i2c_master_bus_handle_t bus_handle, const i2c_device_config_t *dev_config, i2c_master_dev_handle_t *ret_handle), (override));
